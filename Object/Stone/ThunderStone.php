@@ -1,8 +1,8 @@
 <?php
 
-namespace Ash\Item\Stone;
+namespace Kanto\Item\Stone;
 
-use Ash\Item\Stone;
+use Kanto\Item\Stone;
 
 class ThunderStone extends Stone
 {

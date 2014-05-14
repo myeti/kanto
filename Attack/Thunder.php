@@ -1,9 +1,9 @@
 <?php
 
-namespace Ash\Attack;
+namespace Kanto\Attack;
 
-use Ash\Attack;
-use Ash\Type;
+use Kanto\Attack;
+use Kanto\Type;
 
 class Thunder extends Attack
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ash\Pokemon;
+namespace Kanto\Pokemon;
 
-use Ash\Pokemon;
+use Kanto\Pokemon;
 
 class Rattata extends Pokemon
 {

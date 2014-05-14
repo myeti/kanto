@@ -1,8 +1,8 @@
 <?php
 
-namespace Ash\Item;
+namespace Kanto\Item;
 
-use Ash\Item;
+use Kanto\Item;
 
 abstract class Stone extends Item
 {

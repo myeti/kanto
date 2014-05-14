@@ -1,8 +1,8 @@
 <?php
 
-namespace Ash;
+namespace Kanto;
 
-use Ash\Nope\TooManyPokemon;
+use Kanto\Nope\TooManyPokemon;
 
 class Trainer
 {

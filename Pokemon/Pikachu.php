@@ -1,9 +1,9 @@
 <?php
 
-namespace Ash\Pokemon;
+namespace Kanto\Pokemon;
 
-use Ash\Pokemon;
-use Ash\Type;
+use Kanto\Pokemon;
+use Kanto\Type;
 
 class Pikachu extends Pokemon
 {

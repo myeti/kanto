@@ -1,8 +1,8 @@
 <?php
 
-namespace Ash\Attack;
+namespace Kanto\Attack;
 
-use Ash\Attack;
+use Kanto\Attack;
 
 class Fallback extends Attack
 {

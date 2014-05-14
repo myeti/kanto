@@ -1,6 +1,6 @@
 <?php
 
-namespace Ash;
+namespace Kanto;
 
 abstract class Item
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Ash\Nope;
+namespace Kanto\Nope;
 
 class TooManyPokemon extends \Exception
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ash;
+namespace Kanto;
 
-use Ash\Item\Stone;
+use Kanto\Item\Stone;
 
 abstract class Pokemon
 {
@@ -109,9 +109,9 @@ abstract class Pokemon
      */
     public function learn($skill)
     {
-        $class = '\Ash\Attack\\' . $skill;
+        $class = '\Kanto\Attack\\' . $skill;
         if(!class_exists($class)) {
-            $class = '\Ash\attack\Fallback';
+            $class = '\Kanto\attack\Fallback';
         }
         $this->skills[$skill] = new $class();
     }

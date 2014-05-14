@@ -3,24 +3,24 @@
 ```php
 <?php
 
-use Ash\Trainer;
-use Ash\Item\Potion;
-use Ash\Pokemon\Pikachu;
-use Ash\Pokemon\Rattata;
+use Kanto\Trainer;
+use Kanto\Item\Potion;
+use Kanto\Pokemon\Pikachu;
+use Kanto\Pokemon\Rattata;
 
 /**
  * Hello You,
  * ready to be the best trainer ?
  */
-$you = new Trainer('You');
+$ash = new Trainer('Ash');
 
 /**
  * Here is your first pokemon,
  * take care of him !
  * Oh, and take this potion.
  */
-$you->capture(new Pikachu(5));
-$you->take(new Potion);
+$ash->capture(new Pikachu(5));
+$ash->take(new Potion);
 
 /**
  * A wild Rattata appeared !
@@ -30,7 +30,7 @@ $rattata = new Rattata(2);
 /**
  * Pikachu, go !
  */
-$pikachu = $you->go('Pikachu');
+$pikachu = $ash->go('Pikachu');
 $pikachu->attack('ThunderShock', $rattata);
 
 /**

@@ -1,9 +1,9 @@
 <?php
 
-namespace Ash\Item;
+namespace Kanto\Item;
 
-use Ash\Item;
-use Ash\Pokemon;
+use Kanto\Item;
+use Kanto\Pokemon;
 
 class Potion extends Item
 {
