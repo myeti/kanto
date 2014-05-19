@@ -4,7 +4,7 @@ namespace Kanto\Attack;
 
 use Kanto\Attack;
 
-class Fallback extends Attack
+class Basic extends Attack
 {
     // default attack
 } 

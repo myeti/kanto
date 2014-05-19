@@ -2,8 +2,6 @@
 
 namespace Kanto;
 
-use Kanto\Item\Stone;
-
 abstract class Pokemon
 {
 
@@ -11,84 +9,62 @@ abstract class Pokemon
     public $level = 1;
 
     /** @var int */
-    public $exp = 0;
-
-    /** @var int */
     public $type;
 
     /** @var int */
-    public $hp = 10;
+    public $xp;
 
     /** @var int */
-    public $atk = 10;
+    public $hp;
 
     /** @var int */
-    public $def = 10;
+    public $maxHp;
 
     /** @var int */
-    public $spd = 10;
+    public $atk;
 
     /** @var int */
-    public $spe = 10;
+    public $def;
 
     /** @var int */
-    protected $maxHp = 10;
+    public $spd;
 
-    /** @var array */
-    protected $evo = [];
-
-    /** @var array */
-    protected $learning = [
-        1   => ['ThunderShock', 'Growl'],
-        9   => 'TailWhip',
-        16  => 'ThunderWave',
-        26  => 'QuickAttack',
-        33  => 'Agility',
-        43  => 'Thunder',
-    ];
-
-    /** @var Attack[] */
-    protected $skills = [];
+    /** @var int */
+    public $spe;
 
     /** @var string */
     protected $roar;
 
+    /** @var Attack[] */
+    protected $skills = [];
+
+    /** @var array */
+    protected $events = [];
+
+    /** @var array */
+    protected $stats = [
+        'xp'  => [20, 2],
+        'ko'  => [5, 2],
+        'hp'  => [10, 1],
+        'atk' => [10, 1],
+        'def' => [10, 1],
+        'spd' => [10, 1],
+        'spe' => [10, 1],
+    ];
+
 
     /**
-     * Spawn pokemon
+     * Init pokemon
      * @param $level
      */
     public function __construct($level)
     {
-        // set max hp
-        $this->maxHp = $this->hp;
-
         // set level
-        $exp = pow(20, $level);
+        $exp = $this->stats['xp'][0] + ($level * $this->stats['xp'][1]);
         $this->gain($exp);
 
-        // generate skills
-        $this->loadSkills();
-    }
-
-
-    /**
-     * Generate skill liste
-     */
-    protected function loadSkills()
-    {
-        foreach($this->learning as $lvl => $skill) {
-            if($this->level >= $lvl) {
-                if(is_array($skill)) {
-                    foreach($skill as $s) {
-                        $this->learn($s);
-                    }
-                }
-                else {
-                    $this->learn($skill);
-                }
-            }
-        }
+        // init hp
+        $this->hp = $this->maxHp;
     }
 
 
@@ -104,16 +80,31 @@ abstract class Pokemon
 
 
     /**
-     * Learn new attack
-     * @param string $skill
+     * Gain xp
+     * @param int $xp
+     * @return bool|Pokemon
      */
-    public function learn($skill)
+    public function gain($xp)
     {
-        $class = '\Kanto\Attack\\' . $skill;
-        if(!class_exists($class)) {
-            $class = '\Kanto\attack\Fallback';
+        // calculate level
+        $this->xp += $xp;
+        $this->level = $this->xp / $this->stats['xp'][0] / $this->stats['xp'][1];
+
+        // calculate new stats
+        $this->atk = $this->level * $this->stats['atk'][0] / $this->stats['atk'][1];
+        $this->def = $this->level * $this->stats['def'][0] / $this->stats['def'][1];
+        $this->spd = $this->level * $this->stats['spd'][0] / $this->stats['spd'][1];
+        $this->spe = $this->level * $this->stats['spe'][0] / $this->stats['spe'][1];
+
+        // level events
+        for($i = 1; $i <= $this->level; $i++) {
+            $data = $this->event('Level:' . $i);
+            if($data instanceof Pokemon) {
+                return $data;
+            }
         }
-        $this->skills[$skill] = new $class();
+
+        return true;
     }
 
 
@@ -124,7 +115,7 @@ abstract class Pokemon
     public function ko()
     {
         if($this->hp <= 0) {
-            return rand(5, 20) * ($this->level * 2);
+            return $this->level * $this->stats['ko'][0] / $this->stats['ko'][1];
         }
 
         return 0;
@@ -132,18 +123,17 @@ abstract class Pokemon
 
 
     /**
-     * Gain exp & load new skills
-     * @param int $exp
-     * @return float
+     * Take item
+     * @param Item $item
+     * @return mixed
      */
-    public function gain($exp)
+    public function take(Item $item)
     {
-        $this->exp += $exp;
-        $this->level = log($this->exp, 20);
+        // apply effect
+        $item->effect($this);
 
-        $this->loadSkills();
-
-        return $this->level;
+        // inner effect
+        return $this->event('Item:' . $item->name());
     }
 
 
@@ -162,7 +152,7 @@ abstract class Pokemon
 
 
     /**
-     * take damage from attack
+     * Take damage from attack
      * @param int $value
      */
     public function damage($value)
@@ -178,25 +168,74 @@ abstract class Pokemon
 
 
     /**
-     * Try evolving
-     * @param Stone $stone
-     * @return bool|Pokemon
+     * Learn new attack
+     * @param string $skill
      */
-    public function evolve(Stone $stone = null)
+    protected function learn($skill)
     {
-        // find possible evolution
-        foreach($this->evo as $type => $evo) {
+        $class = '\Kanto\Attack\\' . $skill;
+        if(!class_exists($class)) {
+            $class = '\Kanto\Attack\Basic';
+        }
+        $this->skills[$skill] = new $class();
+    }
 
-            // stone condition or level condition
-            if(($stone and $type === $stone->name()) xor (!$stone and is_int($type) and $this->level >= $type)) {
 
-                // create pokemon
-                return new $evo($this->level);
-            }
+    /**
+     * Evolving
+     * @param string $pokemon
+     * @return Pokemon
+     */
+    protected function evolve($pokemon)
+    {
+        $class = '\kanto\Pokemon\\' . $pokemon;
+        return $class();
+    }
 
+
+    /**
+     * Trigger inner event
+     * @param string $name
+     * @return mixed
+     */
+    protected function event($name)
+    {
+        // error
+        if(empty($this->events[$name])) {
+            return null;
         }
 
-        return false;
+        // init
+        $data = null;
+
+        // parse array
+        if(is_array($this->events[$name])) {
+            foreach($this->events[$name] as $action) {
+                if(null !== $result = $this->call($action)) {
+                    $data = $result;
+                }
+            }
+        }
+        else {
+            $data = $this->call($this->events[$name]);
+        }
+
+        return $data;
+    }
+
+
+    /**
+     * Call action
+     * @param string $action
+     * @return mixed
+     */
+    protected function call($action)
+    {
+        $args = explode(':', $action);
+        $method = array_shift($args);
+        if(method_exists($this, $method)) {
+            return call_user_func_array([$this, $method], $args);
+        }
     }
 
 

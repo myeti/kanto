@@ -19,7 +19,7 @@ abstract class Item
     /**
      * Effect
      */
-    public function apply(Pokemon &$pokemon)
+    public function effect(Pokemon &$pokemon)
     {
 
     }

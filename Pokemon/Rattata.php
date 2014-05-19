@@ -7,22 +7,27 @@ use Kanto\Pokemon;
 class Rattata extends Pokemon
 {
 
-    /** @var int */
-    public $hp = 4;
-
-    /** @var array */
-    protected $evo = [20 => 'Raticate'];
-
-    /** @var array */
-    protected $learning = [
-        1   => ['Tackle', 'TailWhip'],
-        7   => 'QuickAttack',
-        14  => 'HyperFang',
-        23  => 'FocusEnergy',
-        34  => 'SuperFang',
-    ];
-
     /** @var string */
     protected $roar = 'Rrraaaattata !';
+
+    /** @var array */
+    protected $stats = [
+        'xp'  => [10, 1],
+        'hp'  => [4, 1],
+        'atk' => [10, 1],
+        'def' => [10, 1],
+        'spd' => [10, 1],
+        'spe' => [10, 1],
+    ];
+
+    /** @var array */
+    protected $events = [
+        'Level:1'           => ['Learn:Tackle', 'Learn:TailWhip'],
+        'Level:7'           => 'Learn:QuickAttack',
+        'Level:14'          => 'Learn:HyperFang',
+        'Level:20'          => 'Evolve:Raticate',
+        'Level:23'          => 'Learn:FocusEnergy',
+        'Level:34'          => 'Learn:SuperFang'
+    ];
 
 } 

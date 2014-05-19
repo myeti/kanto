@@ -98,6 +98,22 @@ class Trainer
 
 
     /**
+     * Give item to pokemon
+     * @param string $object
+     * @param Pokemon $pokemon
+     * @return bool
+     */
+    public function give($object, Pokemon &$pokemon)
+    {
+        // get item
+        $item = $this->get($object);
+
+        // give to pokemon
+        return $pokemon->take($item);
+    }
+
+
+    /**
      * Get item
      * @param $name
      * @return bool|Item
